@@ -75,7 +75,9 @@ class RobotCameraCalibrationNode(Node):
         save_path = os.path.join(self.save_dir, "calibration.yaml")
         with open(save_path, 'w') as yaml_file:
             yaml.dump(transform, yaml_file, default_flow_style=False)
-        self.destroy_node()
+        print("Calibration finshed!")
+        print("Calibration results saved to {}".format(save_path))
+        exit()
 
 
 def main(args=None):
