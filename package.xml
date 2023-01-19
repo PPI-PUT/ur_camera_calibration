@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>robot_camera_calibration</name>
+  <name>ur_camera_calibration</name>
   <version>1.0.0</version>
-  <description>Eye-on-base robot-camera calibration package.</description>
+  <description>Eye-on-base ur_robot-camera calibration package.</description>
   <maintainer email="piotr.kicki@put.poznan.pl">Piotr Kicki</maintainer>
   <license>Apache License 2.0</license>
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(robot_camera_calibration)
+project(ur_camera_calibration)
 
 # require that dependencies from package.xml be available
 find_package(ament_cmake_auto REQUIRED)
@@ -12,7 +12,7 @@ ament_auto_find_build_dependencies(REQUIRED
 ament_python_install_package(${PROJECT_NAME})
 
 # install the main_script file where ros2 is looking for it
-set(PY_EXECUTEABLE "robot_camera_calibration_node.py")
+set(PY_EXECUTEABLE "ur_camera_calibration_node.py")
 install(PROGRAMS ${PROJECT_NAME}/${PY_EXECUTEABLE} DESTINATION lib/${PROJECT_NAME})
 
 # Testing

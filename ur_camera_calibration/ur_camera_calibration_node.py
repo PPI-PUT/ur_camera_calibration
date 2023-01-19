@@ -17,9 +17,9 @@
 import rclpy
 from rclpy.node import Node
 try:
-    from robot_camera_calibration.robot_camera_calibration import RobotCameraCalibration
+    from ur_camera_calibration.ur_camera_calibration import RobotCameraCalibration
 except ImportError:
-    from robot_camera_calibration import RobotCameraCalibration
+    from ur_camera_calibration import RobotCameraCalibration
 from tf2_ros import TransformException
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
