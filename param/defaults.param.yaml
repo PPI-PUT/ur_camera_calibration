@@ -1,0 +1,5 @@
+/**:
+  ros__parameters:
+    robot_ip: "150.254.47.166"
+    save_dir: "."
+    prefix: "left"
