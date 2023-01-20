@@ -34,7 +34,7 @@ class URCameraCalibrationNode(Node):
         super().__init__("ur_camera_calibration_node")
         print("INIT NODE")
         # load parameters
-        obot_ip = self.declare_parameter('robot_ip', "150.254.47.176").value
+        robot_ip = self.declare_parameter('robot_ip', "150.254.47.176").value
         self.save_dir = self.declare_parameter('save_dir', ".").value
         prefix = self.declare_parameter('prefix', "").value
         self.prefix = prefix if prefix == "" or prefix.endswith("_") else prefix + "_"
@@ -47,12 +47,9 @@ class URCameraCalibrationNode(Node):
         Thread(target=self.calibrate).start()
 
     def read_apriltag_transform(self):
-        #print("READ TF:")
         try:
-            # todo: check frame names
             tag_tf = self.tf_buffer.lookup_transform(
                 "rgb_camera_link", "tag", rclpy.time.Time())
-                #"tag", "rgb_camera_link", rclpy.time.Time())
             self.ur_camera_calibration.set_tag_tf(tag_tf)
         except TransformException as e:
             self.get_logger().error("Transform exception: {}".format(e))
