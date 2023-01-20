@@ -1,6 +1,18 @@
 # Eye-on-base UR robot - camera calibration package 
 This package exposes a functionality to calibrate the ur robot with camera using AprilTag and ur_rtde in the eye-on-base setting.
 
+## Dependencies
+* NumPy
+* UR-RTDE
+* SciPy
+* OpenCV
+* yaml
+
+To install use:
+```
+pip install -r requirements.txt
+```
+
 ## How to use
 1. Mount AprilTag on the robot end-effector
 2. Update `param/april_tag.yaml` file with the parameters of the used AprilTag
