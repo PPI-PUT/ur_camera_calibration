@@ -1,5 +1,5 @@
 # Eye-on-base UR robot - camera calibration package 
-This package exposes a functionality to calibrate the ur robot with camera using AprilTag and ur_rtde in the eye-on-base setting.
+This package exposes a functionality to calibrate the UR robot with camera using AprilTag and ur_rtde in the eye-on-base setting.
 
 ## Dependencies
 * NumPy
@@ -20,5 +20,5 @@ pip install -r requirements.txt
 4. Set robot position such that AprilTag is visible to the camera
 5. Launch calibration 
    ```
-   ros2 launch robot_camera_calibration robot_camera_calibration.launch.py \ config_param_file:=./src/external/robot_camera_calibration/param/defaults.param.yaml
+   ros2 launch ur_camera_calibration ur_camera_calibration.launch.py \ config_param_file:=./src/external/ur_camera_calibration/param/defaults.param.yaml
    ```

@@ -17,9 +17,9 @@
 import rclpy
 from rclpy.node import Node
 try:
-    from ur_camera_calibration.ur_camera_calibration import RobotCameraCalibration
+    from ur_camera_calibration.ur_camera_calibration import URCameraCalibration
 except ImportError:
-    from ur_camera_calibration import RobotCameraCalibration
+    from ur_camera_calibration import URCameraCalibration
 from tf2_ros import TransformException
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
@@ -29,17 +29,17 @@ import yaml
 from threading import Thread
 
 
-class RobotCameraCalibrationNode(Node):
+class URCameraCalibrationNode(Node):
     def __init__(self):
-        super().__init__("robot_camera_calibration_node")
+        super().__init__("ur_camera_calibration_node")
         print("INIT NODE")
         # load parameters
-        robot_ip = self.declare_parameter('robot_ip', "150.254.47.176").value
+        obot_ip = self.declare_parameter('robot_ip', "150.254.47.176").value
         self.save_dir = self.declare_parameter('save_dir', ".").value
         prefix = self.declare_parameter('prefix', "").value
         self.prefix = prefix if prefix == "" or prefix.endswith("_") else prefix + "_"
 
-        self.robot_camera_calibration = RobotCameraCalibration(robot_ip)
+        self.ur_camera_calibration = URCameraCalibration(robot_ip)
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
         self.timer = self.create_timer(0.1, self.read_apriltag_transform)
@@ -53,12 +53,12 @@ class RobotCameraCalibrationNode(Node):
             tag_tf = self.tf_buffer.lookup_transform(
                 "rgb_camera_link", "tag", rclpy.time.Time())
                 #"tag", "rgb_camera_link", rclpy.time.Time())
-            self.robot_camera_calibration.set_tag_tf(tag_tf)
+            self.ur_camera_calibration.set_tag_tf(tag_tf)
         except TransformException as e:
             self.get_logger().error("Transform exception: {}".format(e))
 
     def calibrate(self):
-        rot, trans = self.robot_camera_calibration.callibrate()
+        rot, trans = self.ur_camera_calibration.callibrate()
         rot = rot.tolist()
         trans = trans.tolist()
         transform = {
@@ -82,7 +82,7 @@ class RobotCameraCalibrationNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = RobotCameraCalibrationNode()
+    node = URCameraCalibrationNode()
     try:
         rclpy.spin(node)
         node.destroy_node()

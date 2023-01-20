@@ -47,7 +47,7 @@ def modify_pose(pose, move):
     pose[3:] = rotmat2rotvec(Re @ R)
     return pose
 
-class RobotCameraCalibration:
+class URCameraCalibration:
     def __init__(self, robot_ip) -> None:
         self.tag_rot = np.eye(3)
         self.tag_trans = np.array([0., 0., 0.])

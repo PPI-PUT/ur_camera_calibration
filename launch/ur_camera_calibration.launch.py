@@ -22,7 +22,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    pkg_prefix = get_package_share_directory("robot_camera_calibration")
+    pkg_prefix = get_package_share_directory("ur_camera_calibration")
 
     config_param = DeclareLaunchArgument(
         'config_param_file',
@@ -30,11 +30,11 @@ def generate_launch_description():
         description='Node config.'
     )
 
-    robot_camera_calibration_node = Node(
-            name='robot_camera_calibration_node',
+    ur_camera_calibration_node = Node(
+            name='ur_camera_calibration_node',
             namespace='',
-            package='robot_camera_calibration',
-            executable='robot_camera_calibration_node.py',
+            package='ur_camera_calibration',
+            executable='ur_camera_calibration_node.py',
             parameters=[
                 LaunchConfiguration('config_param_file'),
             ],
@@ -42,9 +42,6 @@ def generate_launch_description():
             arguments=['--ros-args', '--log-level', 'info', '--enable-stdout-logs'],
             emulate_tty=True
     )
-
-    #delayed_robot_camera_calibration_node = TimerAction(period=20.,
-    #                                                    actions=[robot_camera_calibration_node])
 
     camera_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
@@ -75,7 +72,7 @@ def generate_launch_description():
     )
 
     apriltag_config_file = os.path.join(
-                                get_package_share_directory('robot_camera_calibration'),
+                                get_package_share_directory('ur_camera_calibration'),
                                 'param',
                                 'april_tag.yaml')
     apriltag_detector_node = IncludeLaunchDescription(
@@ -92,5 +89,5 @@ def generate_launch_description():
         config_param,
         camera_node,
         apriltag_detector_node,
-        robot_camera_calibration_node,
+        ur_camera_calibration_node,
         ])
