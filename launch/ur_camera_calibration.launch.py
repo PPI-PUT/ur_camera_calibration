@@ -16,7 +16,9 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler, EmitEvent
+from launch.event_handlers import OnProcessExit
+from launch.events import Shutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 
@@ -24,12 +26,14 @@ from launch_ros.actions import Node
 def generate_launch_description():
     pkg_prefix = get_package_share_directory("ur_camera_calibration")
 
+    # configs
     config_param = DeclareLaunchArgument(
         'config_param_file',
         default_value=[pkg_prefix, '/param/defaults.param.yaml'],
         description='Node config.'
     )
 
+    # nodes and launches
     ur_camera_calibration_node = Node(
             name='ur_camera_calibration_node',
             namespace='',
@@ -85,9 +89,20 @@ def generate_launch_description():
                               ).items(),
     )
 
+    # events and wrokflow
+    calibration_finished_event = RegisterEventHandler(
+        OnProcessExit(
+            target_action=ur_camera_calibration_node,
+            on_exit=[
+                EmitEvent(event=Shutdown(reason='Calibration finished'))
+            ]
+        )
+    )
+
     return LaunchDescription([
         config_param,
         camera_node,
         apriltag_detector_node,
         ur_camera_calibration_node,
+        #calibration_finished_event,
         ])

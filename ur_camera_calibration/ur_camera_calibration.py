@@ -125,10 +125,10 @@ class URCameraCalibration:
         print("Starting calibration")
         # todo: 
         robot_pose = self.robot_receive.getActualTCPPose()
-        for m in self.moves:
+        for i, m in enumerate(self.moves):
             desired_pose = modify_pose(copy(robot_pose), m)
             self.robot_control.moveJ_IK(desired_pose)
-            print(desired_pose)
+            print(f"Executing move {i}/{len(self.moves)} to pose: {desired_pose}")
             sleep(2.)
             actual_pose = self.robot_receive.getActualTCPPose()
             self.tcp_t.append(actual_pose[:3])
@@ -136,18 +136,17 @@ class URCameraCalibration:
             self.marker_t.append(self.tag_t)
             self.marker_R.append(self.tag_R)
             sleep(1.)
+        print("Calibration moves finished")
         
         self.tcp_t, self.tcp_R = np.array(self.tcp_t), np.array(self.tcp_R)
         self.marker_t, self.marker_R = np.array(self.marker_t), np.array(self.marker_R)
         calibration_data = dict(tcp_t=self.tcp_t, tcp_R=self.tcp_R,
                                 marker_t=self.marker_t, marker_R=self.marker_R)
-        np.save("calibration_data_12.npy", calibration_data)
-        print(self.tcp_t)
-        print(self.marker_t)
         invtcp_R = np.linalg.inv(self.tcp_R)
         invtcp_t = (-invtcp_R @ self.tcp_t[..., np.newaxis])[..., 0]
         R, t = cv2.calibrateHandEye(invtcp_R, invtcp_t, self.marker_R, self.marker_t)
         R = np.array([[-1., 0., 0.], [0., -1., 0.], [0., 0., 1.]]) @ R
         R = rotmat2quat(R)
-        print(R, t)
+        print("RESULTANT ROTATION: ", R)
+        print("RESULTANT TRANSLATION: ", t)
         return R, t[:, 0]

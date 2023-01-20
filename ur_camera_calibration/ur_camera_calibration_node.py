@@ -16,6 +16,7 @@
 
 import rclpy
 from rclpy.node import Node
+from rclpy.task import Future
 try:
     from ur_camera_calibration.ur_camera_calibration import URCameraCalibration
 except ImportError:
@@ -43,6 +44,7 @@ class URCameraCalibrationNode(Node):
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
         self.timer = self.create_timer(0.1, self.read_apriltag_transform)
+        self.is_calibration_finished = False
         print("NODE INITIALIZED")
         Thread(target=self.calibrate).start()
 
@@ -74,18 +76,29 @@ class URCameraCalibrationNode(Node):
             yaml.dump(transform, yaml_file, default_flow_style=False)
         print("Calibration finshed!")
         print("Calibration results saved to {}".format(save_path))
-        exit()
+        self.is_calibration_finished = True
+
+    #def done(self):
+    #    return self.is_calibration_finished
+
+    #def add_done_callback(self, callback):
+    #    pass
 
 
 def main(args=None):
     rclpy.init(args=args)
     node = URCameraCalibrationNode()
-    try:
-        rclpy.spin(node)
-        node.destroy_node()
-        rclpy.shutdown()
-    except KeyboardInterrupt:
-        pass
+    while rclpy.ok() and not node.is_calibration_finished:
+        rclpy.spin_once(node)
+    node.destroy_node()
+    rclpy.shutdown()
+    
+    #try:
+    #    rclpy.spin_until_future_complete(node, node.task)
+    #    node.destroy_node()
+    #    rclpy.shutdown()
+    #except KeyboardInterrupt:
+    #    pass
 
 
 if __name__ == "__main__":
